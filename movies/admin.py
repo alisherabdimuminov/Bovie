@@ -11,9 +11,9 @@ class GenreModelAdmin(ModelAdmin):
 
 @admin.register(Movie)
 class MovieModelAdmin(ModelAdmin):
-    list_display = ["name", "author"]
+    list_display = ["uid", "name", "author", "count_viewers", "rank", "search", "year", "length", "is_premiere"]
 
 
 @admin.register(Comment)
 class CommentModelAdmin(ModelAdmin):
-    list_display = ["author", "movie", "created_at"]
+    list_display = ["author", "movie", "comment", "created_at"]

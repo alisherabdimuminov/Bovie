@@ -2,7 +2,7 @@ from uuid import uuid4
 from django.db import models
 from users.models import User
 
-from .utils import max_value_validator, min_value_validator
+from .utils import max_value_validator, min_value_validator, truncate
 
 
 class Genre(models.Model):
@@ -29,10 +29,11 @@ class Movie(models.Model):
     rank = models.DecimalField(max_digits=5, decimal_places=1, validators=[min_value_validator, max_value_validator])
     viewers = models.ManyToManyField(User, related_name="movie_viewers", null=True, blank=True, verbose_name="Kinoni tomosha qilganlar")
     feedbackers = models.ManyToManyField(User, related_name="movei_feedbackers", null=True, blank=True, verbose_name="Kinoga baho berganlar")
+    feedback = models.DecimalField(default=0, null=True, blank=True, decimal_places=1, max_digits=10)
     search = models.IntegerField(default=0, verbose_name="Kino qidiruvlar soni")
     price = models.IntegerField(verbose_name="Kino narxi", default=0)
     is_premiere = models.BooleanField(default=False, verbose_name="Kino premyerami?")
-    length = models.IntegerField()
+    length = models.IntegerField(verbose_name="Kino davomiyligi")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -59,6 +60,9 @@ class Comment(models.Model):
     body = models.TextField(verbose_name="Izox matni")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def comment(self):
+        return truncate(self.body)
 
     class Meta:
         verbose_name = "Izox"

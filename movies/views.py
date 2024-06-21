@@ -105,7 +105,7 @@ def movie(request: HttpRequest, uid: str):
     })
 
 
-@api_view(http_method_names=["GET"])
+@api_view(http_method_names=["POST"])
 @authentication_classes(authentication_classes=[TokenAuthentication])
 @permission_classes(permission_classes=[IsAuthenticated])
 def comment(request: HttpRequest):
@@ -141,12 +141,12 @@ def comment(request: HttpRequest):
     })
 
 
-@api_view(http_method_names=["GET"])
+@api_view(http_method_names=["POST"])
 @authentication_classes(authentication_classes=[TokenAuthentication])
 @permission_classes(permission_classes=[IsAuthenticated])
 def feedback(request: HttpRequest):
     movie_id: str | None = request.data.get("movie_id")
-    feed: str | None = request.data.get("feedback")
+    feed: float | None = request.data.get("feedback")
     if not movie_id:
         return Response({
             "status": "success",
@@ -164,15 +164,46 @@ def feedback(request: HttpRequest):
             "data": {},
         })
     movie = get_object_or_404(Movie, uid=movie_id)
-    movie_rank = movie.rank
-    feedbackers = movie.feedbackers.count()
-    feedback_obj = (movie_rank + float(feed)) / (feedbackers + 1)
-    movie.rank = feedback_obj
-    movie.save()
+    if request.user not in movie.feedbackers.all():
+        movie_general_rank = movie.feedback # barcha baholar yig'indisi 
+        movie.feedback = float(movie_general_rank) + float(feed)
+        movie.feedbackers.add(request.user)
+        movie.save()
+        feedbackers = movie.feedbackers.count()
+        feedback_obj = (float(movie_general_rank) + float(feed)) / feedbackers
+        movie.rank = feedback_obj
+        movie.save()
+        return Response({
+            "status": "success",
+            "errors": {},
+            "data": {
+                "message": "Kinoga baho berish yakunlandi."
+            }
+        })
+    return Response({
+        "status": "success",
+        "errors": {
+            "feedback": "Siz kinoga allaqachon baho bergansiz."
+        },
+        "data": {}
+    })
+
+
+@api_view(http_method_names=["GET"])
+@authentication_classes(authentication_classes=[TokenAuthentication])
+@permission_classes(permission_classes=[IsAuthenticated])
+def search(request: HttpRequest, query: str):
+    movies_obj = Movie.objects.filter(name__icontains=query)
+    movies = MoviesModelSerializer(movies_obj, many=True)
+    for movie in movies_obj:
+        movie.search += 1
+        movie.save()
     return Response({
         "status": "success",
         "errors": {},
-        "data": {}
+        "data": {
+            "movies": movies.data
+        }
     })
 
 def handler404(request: HttpRequest, exception):

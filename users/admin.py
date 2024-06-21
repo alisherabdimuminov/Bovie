@@ -8,7 +8,7 @@ from .models import User
 
 
 @admin.register(User)
-class UserModelAdmin(UserAdmin, admin.ModelAdmin):
+class UserModelAdmin(UserAdmin, ModelAdmin):
     list_display = ["username", "first_name", "last_name"]
     add_form = UserCreationForm
     form = UserUpdateForm

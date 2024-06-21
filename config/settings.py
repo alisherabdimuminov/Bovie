@@ -89,7 +89,7 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / "static"
 
-MEDI_URL = 'https://bovie.uz/media/'
+MEDI_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, '/var/www/media/')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

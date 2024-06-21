@@ -1,7 +1,7 @@
 from django.http import HttpRequest
 from django.db.models import Count
 from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
@@ -174,3 +174,6 @@ def feedback(request: HttpRequest):
         "errors": {},
         "data": {}
     })
+
+def handler404(request: HttpRequest, exception):
+    return render(request=request, template_name="404.html", context={})

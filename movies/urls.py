@@ -9,6 +9,7 @@ from .views import (
     most_famous,
 )
 
+handler404 = "movies.views.handler404"
 
 urlpatterns = [
     path("premieres/", premieres, name="premieres"),

@@ -11,6 +11,10 @@ class Genre(models.Model):
     def __str__(self):
         return self.name
     
+    class Meta:
+        verbose_name = "Janr"
+        verbose_name_plural = "Janrlar"
+    
 
 class Movie(models.Model):
     name = models.CharField(max_length=1000, verbose_name="Kino nomi")
@@ -43,6 +47,10 @@ class Movie(models.Model):
     
     def count_comments(self):
         return Comment.objects.filter(movie=self).count()
+    
+    class Meta:
+        verbose_name = "Kino"
+        verbose_name_plural = "Kinolar"
 
 
 class Comment(models.Model):
@@ -51,4 +59,8 @@ class Comment(models.Model):
     body = models.TextField(verbose_name="Izox matni")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Izox"
+        verbose_name_plural = "Izoxlar"
 

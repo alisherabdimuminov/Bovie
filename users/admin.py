@@ -19,6 +19,6 @@ class UserModelAdmin(UserAdmin, ModelAdmin):
     )
     fieldsets = (
         ("Foydalanuvchini tahrirlash", {
-            "fields": ("username", "first_name", "last_name", ),
+            "fields": ("username", "first_name", "last_name", "groups", "is_staff", ),
         }),
     )
